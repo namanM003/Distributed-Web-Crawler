@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	// "flag"
 	"fmt"
-	"github.com/kavanaanand09/collectlinks"
+	"github.com/kavanaanand09/Distributed-Web-Crawler/collectlinks"
 	"net/http"
 	"net/url"
 	// "os"
