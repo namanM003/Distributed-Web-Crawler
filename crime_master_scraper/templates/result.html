@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Web Crawler</title>
+    </head>
+    <body>
+    	<h1 align='center'> Results </h1>
+        <p> Configurable links to {{page}} are stored in links.csv </p><br/>
+        <br/>
+		<br/>
+        <table border="1" style="width:50%">
+		  	{% for row_index in range(headersPages['headers']|count) %}
+				<tr>
+			      	<td>{{ headersPages['headers'][row_index]|tojson|safe }}</td>
+			      	<td>{{ headersPages['numbers'][row_index] }}</td>
+			    </tr>
+			{% endfor %}
+		</table>
+		<br/>
+		<br/>
+		  	{% for row_index in range(missingpagesList|count) %}
+		  	<table border="1" style="width:50%">
+		  		<tr>
+		  			<th>{{missingpagesList[row_index]['headerName']}}</th>
+				</tr>
+				{% for row_index1 in range(missingpagesList[row_index]['pages']|count) %}
+				<tr>
+			      <td>{{ missingpagesList[row_index]['pages'][row_index1]|tojson|safe }}</td>
+			    </tr>
+			    {% endfor %}
+			</table>
+			<br/>
+			{% endfor %}
+    </body>
+</html>

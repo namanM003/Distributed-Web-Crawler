@@ -6,6 +6,14 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from crime_master_scraper.items import CrimeMasterScraperItem
 from urlparse import urlparse
+import urllib2
+from scrapy.exceptions import CloseSpider
+#from scrapy.project import crawler
+
+def get_redirected_url(url):
+    opener = urllib2.build_opener(urllib2.HTTPRedirectHandler)
+    request = opener.open(url)
+    return request.url
 
 class MySpider(CrawlSpider):
     #Name of the spider
@@ -17,12 +25,17 @@ class MySpider(CrawlSpider):
         Rule(LinkExtractor(), callback="parse_items", follow= True),
     )
 
-    def __init__(self, start_url = '', *args, **kwargs):
+    def __init__(self, start_url = '', num_pages_to_crawl=1,*args, **kwargs):
         super(MySpider, self).__init__(*args, **kwargs)
 
         #start_urls = [kwargs.get('start_url')]
         #Assign a start url to start scraping
+	fp = urllib2.urlopen(start_url)
+	start_url = get_redirected_url(start_url)
         self.start_urls = [start_url]
+
+	self.num_pages_to_crawl = num_pages_to_crawl
+	self.num_pages_crawled = 0
 
         #Extract domain-name of the start_url. To restrict to the domain, scrapy expects domain name to be of pattern "google.com".
         #Hence, the additional https:// and / tags needs to be removed.
@@ -36,7 +49,11 @@ class MySpider(CrawlSpider):
         self.allowed_domains = [domain]
 
     def parse_items(self, response):
+	#Stop crawling if max number of pages are crawled
+	if int(self.num_pages_crawled) == int(self.num_pages_to_crawl):
+		raise CloseSpider('Maximum number of pages crawled')
         #Yield each scraped item's url. You could also return the entire list of urls from the response but yield results in a better performance.
         item = CrimeMasterScraperItem()
         item['link'] = response.url
+	self.num_pages_crawled = self.num_pages_crawled + 1
         yield item
