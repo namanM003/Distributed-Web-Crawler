@@ -6,26 +6,6 @@ import sys
 logDir = "./"
 logFilePath = ""
 
-'''
-url = "www.google.com"
-
-conn = http.client.HTTPConnection(url)
-
-conn.request("HEAD", "/index.html")
-
-res = conn.getresponse()
-
-print(res.getheaders())
-
-class Header():
-  def __init__(framing=None,transport=None,content_options=None,content_type=None,xss=None):
-    self.X_Frame_Options = framing
-    self.Strict_Transport_Security= transport
-    self.X_Content_Type_Options=content_options
-    self.Content_Type=content_type
-    self.X-XSS-Protection=xss
-    self.Cache-Control
-'''
 class UrlHeader(object):
   def __init__(self,url):
     self.redirectFlag = False
