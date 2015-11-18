@@ -70,8 +70,6 @@ def send_clients():
 app = Flask(__name__)
 '''
 clients = list()
-
-
 @app.run(port=5001)
 '''
 
@@ -87,7 +85,7 @@ def submit():
     #print page
     #send_clients()
     # Uncomment the following to run scrapy
-    command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + num_pages_to_crawl +-o links.csv -t csv"
+    command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
     os.system(command)
     '''
