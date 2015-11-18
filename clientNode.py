@@ -178,7 +178,8 @@ def sendRequest(opener,url):
     headerObj.redirectFlag = True
     headerObj.redirectUrl = redirectUrl.lower()
 
-  headerObj.headers = infile.headers.dict
+  for k,v in infile.headers._headers:
+    headerObj.headers[k]=v
   return headerObj
 
 
