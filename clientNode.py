@@ -6,6 +6,7 @@ import socket
 import _thread
 from threading import Thread, Lock
 from threading import Condition
+import pickle as pickle
 queue = []
 condition = Condition()
 

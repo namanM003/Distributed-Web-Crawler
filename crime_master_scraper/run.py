@@ -9,7 +9,7 @@ import _thread
 from threading import Thread, Lock
 from threading import Condition
 import csv
-
+import pickle as pickle
 clients = list()
 #thread.start_new_thread(add_client, () )
 
@@ -52,20 +52,25 @@ def add_client():
 
 def send_clients():
      links = list()
-#    print "in send clients"
+     print("in send clients")
      with open('links.csv') as f:
         content = f.readlines()
 #    for line in content:
 #	print line
-#    print content
-     with open('links.csv', 'r') as csvfile:
-        read_file = csv.reader(csvfile, delimeter=",")
-        for row in read_file:
-            links.append(row)
+     print(content)
+     #with open('links.csv', 'r') as csvfile:
+     #   read_file = csv.reader(csvfile, delimeter=",")
+     for row in content:
+         if row.strip() != 'link':
+             links.append(row)
+         print(row)
      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+     print(clients[0])
      sock.connect(clients[0])
      data_strings = pickle.dumps(links,-1)
+     print("Pickle dumps created")
      sock.sendall(data_strings)
+     print("Data sent") 
      sock.close()
             #print row
      #print links
@@ -94,6 +99,9 @@ def submit():
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
     os.system(command)
+    print('calling send client')
+    send_clients()
+    print("called send clients")
     '''
     f = open(links.csv)
     with open('links.csv', 'rb') as csvfile:
