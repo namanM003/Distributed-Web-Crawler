@@ -29,7 +29,7 @@ def add_client():
         clients.append(client_address)
 	#logger.info("New Client added : " + str(client_address))
 	#print 'new client added'
-	#print client_address
+        print(client_address)
         
         try:
             #print >>sys.stderr, 'connection from', client_address
@@ -82,6 +82,7 @@ def form():
 def submit():
     page=request.form['webpage']
     num_pages_to_crawl=10
+    print('reached below crawl')
     #print page
     #send_clients()
     # Uncomment the following to run scrapy
