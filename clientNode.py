@@ -102,6 +102,7 @@ if __name__=="__main__":
     sys.exit(2)
   logFilePath = "logClient%s"%sys.argv[1]
   opener = getUserAgent()
+
   a = sendRequest(opener,"https://www.google.com")
   c=sendRequest(opener,"https://cricket.yahoo.com")
   l = [a,c]
