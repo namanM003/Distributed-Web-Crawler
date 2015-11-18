@@ -62,6 +62,11 @@ def send_clients():
         read_file = csv.reader(csvfile, delimeter=",")
         for row in read_file:
             links.append(row)
+     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+     sock.connect(clients[0])
+     data_strings = pickle.dumps(links,-1)
+     sock.sendall(data_strings)
+     sock.close()
             #print row
      #print links
 	
