@@ -81,17 +81,18 @@ class ConsumerThread(Thread):
               obj = sendRequest(opener,url)
               if obj!=None:
                 listObjs.append(obj)
-            if len(obj)!=0:
+            if len(listObjs)!=0:
               result = headerCount ()
               result.accumulateResults(listObjs)
             else:
               print("Consumed but didnt get relevant results")
               continue
-            print("Consumed" + str (request.ip_addr))
+            #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
             #print >>sys.stderr, 'received "%s"' % request.ip_addr
             print("Sending to the server")
+            print(result)
             server_send(result)  
 ################################################################################
 logDir = "./"

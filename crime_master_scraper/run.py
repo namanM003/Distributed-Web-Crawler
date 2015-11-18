@@ -91,7 +91,7 @@ def form():
 @app.route('/submit/', methods=['POST'])
 def submit():
     page=request.form['webpage']
-    num_pages_to_crawl=10
+    num_pages_to_crawl=1
     print('reached below crawl')
     #print page
     #send_clients()
