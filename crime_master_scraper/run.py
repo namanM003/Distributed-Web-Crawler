@@ -1,24 +1,21 @@
 from flask import Flask, render_template, request, url_for
 import os
 import csv
-from http.server import BaseHTTPRequestHandler,HTTPServer
+from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import cgi
 import socket
 import sys
-import _thread
+import thread
 from threading import Thread, Lock
 from threading import Condition
 import csv
-import pickle as pickle
+import cPickle as pickle
 clients = list()
-#thread.start_new_thread(add_client, () )
 
 def add_client():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#    print 'Thread started'
     server_address = ('localhost', 10000)
         
-    #print >>sys.stderr, 'starting up on %s port %s' % server_address
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(server_address)
     sock.listen(5)
@@ -63,25 +60,29 @@ def send_clients():
      for row in content:
          if row.strip() != 'link':
              links.append(row)
-         print(row)
-     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-     print(clients[0])
-     sock.connect(clients[0])
-     data_strings = pickle.dumps(links,-1)
-     print("Pickle dumps created")
-     sock.sendall(data_strings)
-     print("Data sent") 
-     sock.close()
-            #print row
-     #print links
+         #print(row)
+     if len(clients) == 0:
+         print('No clients available')
+         return
+     x = len(links)/len(clients)
+     z = 0
+     for client in len(clients):
+       data = []
+       for i in range(z,min(z+x,len(links))):
+         data.append(links[i])
+       sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+       print(clients[client])
+       sock.connect(clients[client])
+       data_strings = pickle.dumps(data,-1)
+       print("Pickle dumps created")
+       sock.sendall(data_strings)
+       print("Data sent") 
+       sock.close()
+       z = z+x
 	
     
 
 app = Flask(__name__)
-'''
-clients = list()
-@app.run(port=5001)
-'''
 
 @app.route('/')
 def form():
@@ -93,20 +94,10 @@ def submit():
     page=request.form['webpage']
     num_pages_to_crawl=1
     print('reached below crawl')
-    #print page
-    #send_clients()
-    # Uncomment the following to run scrapy
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
     os.system(command)
-    print('calling send client')
     send_clients()
-    print("called send clients")
-    '''
-    f = open(links.csv)
-    with open('links.csv', 'rb') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-    '''
     headers = ['A','B','C']
     numbers = ['3','2','4']
     headersPages = {'headers':headers,'numbers':numbers}
@@ -117,5 +108,5 @@ def submit():
     return render_template('result.html', page=page, headersPages=headersPages, missingpagesList=missingpagesList)
 
 if __name__ == "__main__":
-    _thread.start_new_thread(add_client, () )
+    thread.start_new_thread(add_client, () )
     app.run()
