@@ -1,12 +1,13 @@
 #Code to extract headers from HTTP Response
-import urllib.request
+import urllib2
 import datetime
 import sys
 import socket
-import _thread
+import thread
 from threading import Thread, Lock
 from threading import Condition
-import pickle as pickle
+import cPickle as pickle
+from bs4 import BeautifulSoup
 queue = []
 condition = Condition()
 
@@ -20,7 +21,7 @@ def server_send(response):
         
         sock.connect(server_address)  
         data_string = pickle.dumps(response, -1)
-        print("Final send to the server ")
+        print "Final send to the server"
         sock.sendall(data_string)
     finally:
             #print >>sys.stderr, 'closing socket'
@@ -87,12 +88,12 @@ class ConsumerThread(Thread):
             else:
               print("Consumed but didnt get relevant results")
               continue
+            print result
             #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
             #print >>sys.stderr, 'received "%s"' % request.ip_addr
             print("Sending to the server")
-            print(result)
             server_send(result)  
 ################################################################################
 logDir = "./"
@@ -104,6 +105,7 @@ class UrlHeader(object):
     self.url = url.lower()
     self.headers = {}
     self.redirectUrl = ""
+    self.requiredNonce = False 
 
 class headerCount(object):
   def __init__(self):
@@ -160,7 +162,7 @@ class headerCount(object):
     return '\n'.join(resultString)
 
 def getUserAgent():
-  opener = urllib.request.build_opener()
+  opener = urllib2.build_opener()
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
   return opener
 
@@ -179,8 +181,11 @@ def sendRequest(opener,url):
     headerObj.redirectFlag = True
     headerObj.redirectUrl = redirectUrl.lower()
 
+  headerObj.headers = infile.headers.dict
+  '''
   for k,v in infile.headers._headers:
     headerObj.headers[k]=v
+  '''
   return headerObj
 
 
@@ -206,7 +211,7 @@ if __name__=="__main__":
   #print >>sys.stderr, 'connecting to %s port %s' % server_address
   sock.connect(server_address)
   try:
-    _thread.start_new_thread(client_listen, ())                                ## Producer thread !!
+    thread.start_new_thread(client_listen, ())                                ## Producer thread !!
     ConsumerThread().start()
 
   except:
