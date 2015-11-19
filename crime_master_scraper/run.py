@@ -44,21 +44,41 @@ def add_client():
         #finally:
             # Clean up the connection
         # Create a TCP/IP socket
+def client_listen():
+    sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_address = ('localhost', 10001)
+    sock1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock1.bind(server_address)
+    
+    sock1.listen(5)
+    while True:
+        # Wait for a connection
+        connection, client_address = sock1.accept()
+        try:
+            print >>sys.stderr, 'connection from', client_address
+    
+            # Receive the data in small chunks and retransmit it
+            data = connection.recv(11000)
+	    response = pickle.loads(data)
+	    #print >>sys.stderr, 'received "%s"' % response.result_dict
+            #print " Got Response " + str(response.result_dict)
+	    ProducerResponse(response);
+                
+        finally:
+            # Clean up the connection
+            connection.close()
+
 
 def send_clients():
      links = list()
+
      print("in send clients")
      with open('links.csv') as f:
         content = f.readlines()
-#    for line in content:
-#	print line
      print(content)
-     #with open('links.csv', 'r') as csvfile:
-     #   read_file = csv.reader(csvfile, delimeter=",")
      for row in content:
          if row.strip() != 'link':
              links.append(row)
-         #print(row)
      print links
      if len(clients) == 0:
          print('No clients available')
@@ -82,7 +102,48 @@ def send_clients():
        print("Data sent") 
        sock.close()
        z = z+x
-	
+
+
+################################################################################
+ 
+def Producer(request):
+    global queue   
+    condition.acquire()
+    length = len(queue)
+    queue.append(request)
+    print "Produced", request 
+    if length == 0:
+        print "Notifying"
+        condition.notify()
+    condition.release()
+
+class ConsumerResponseThread(Thread):
+    def run(self):
+        global response_queue
+        while True:
+            condition_response.acquire()
+            if not response_queue:
+                print "Nothing in queue, consumer is waiting"
+                condition_response.wait()
+                print "Producer added something to queue and notified the consumer"
+            response = response_queue.pop(0)
+	    condition_response.release()
+            time.sleep(1)
+    
+def ProducerResponse(response):
+    global response_queue   
+    condition_response.acquire()
+    length = len(response_queue)
+    response_queue.append(response)
+    print "Produced_response", response 
+    if length == 0:
+        print "Notifying"
+        condition_response.notify()
+    condition_response.release() 
+
+#currently we need to add code for creation of queue and manipulating it.
+
+####################################################################################	
     
 
 app = Flask(__name__)

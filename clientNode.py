@@ -15,7 +15,7 @@ condition = Condition()
 def server_send(response):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_address = ('localhost', 10000)
+        server_address = ('localhost', 10001)
         
         #print >>sys.stderr, 'starting up on %s port %s' % client_address
         
