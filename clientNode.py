@@ -6,7 +6,8 @@ import socket
 import thread
 from threading import Thread, Lock
 from threading import Condition
-import pickle as pickle
+import cPickle as pickle
+from bs4 import BeautifulSoup
 queue = []
 condition = Condition()
 
@@ -20,7 +21,7 @@ def server_send(response):
         
         sock.connect(server_address)  
         data_string = pickle.dumps(response, -1)
-        print("Final send to the server ")
+        print "Final send to the server"
         sock.sendall(data_string)
     finally:
             #print >>sys.stderr, 'closing socket'
@@ -81,13 +82,14 @@ class ConsumerThread(Thread):
               obj = sendRequest(opener,url)
               if obj!=None:
                 listObjs.append(obj)
-            if len(obj)!=0:
+            if len(listObjs)!=0:
               result = headerCount ()
               result.accumulateResults(listObjs)
             else:
               print("Consumed but didnt get relevant results")
               continue
-            print("Consumed" + str (request.ip_addr))
+            print result
+            #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
             #print >>sys.stderr, 'received "%s"' % request.ip_addr
@@ -103,6 +105,7 @@ class UrlHeader(object):
     self.url = url.lower()
     self.headers = {}
     self.redirectUrl = ""
+    self.requiredNonce = False 
 
 class headerCount(object):
   def __init__(self):
@@ -159,7 +162,7 @@ class headerCount(object):
     return '\n'.join(resultString)
 
 def getUserAgent():
-  opener = urllib.request.build_opener()
+  opener = urllib2.build_opener()
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
   return opener
 
@@ -178,8 +181,11 @@ def sendRequest(opener,url):
     headerObj.redirectFlag = True
     headerObj.redirectUrl = redirectUrl.lower()
 
+  headerObj.headers = infile.headers.dict
+  '''
   for k,v in infile.headers._headers:
     headerObj.headers[k]=v
+  '''
   return headerObj
 
 

@@ -43,7 +43,6 @@ def add_client():
                 
         #finally:
             # Clean up the connection
-            #connection.close()
         # Create a TCP/IP socket
 
 def send_clients():
@@ -60,18 +59,23 @@ def send_clients():
          if row.strip() != 'link':
              links.append(row)
          #print(row)
+     print links
      if len(clients) == 0:
          print('No clients available')
          return
-     x = len(links)/len(clients)
+     if len(links) != 1:
+       x = len(links)/len(clients)
+     else:
+       x = 1
      z = 0
-     for client in len(clients):
+     for client in clients:
+       print client
        data = []
        for i in range(z,min(z+x,len(links))):
          data.append(links[i])
        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-       print(clients[client])
-       sock.connect(clients[client])
+       print(client)
+       sock.connect(client)
        data_strings = pickle.dumps(data,-1)
        print("Pickle dumps created")
        sock.sendall(data_strings)
@@ -91,7 +95,7 @@ def form():
 @app.route('/submit/', methods=['POST'])
 def submit():
     page=request.form['webpage']
-    num_pages_to_crawl=10
+    num_pages_to_crawl=1
     print('reached below crawl')
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
