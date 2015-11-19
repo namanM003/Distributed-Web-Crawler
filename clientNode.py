@@ -1,9 +1,9 @@
 #Code to extract headers from HTTP Response
-import urllib.request
+import urllib2
 import datetime
 import sys
 import socket
-import _thread
+import thread
 from threading import Thread, Lock
 from threading import Condition
 import pickle as pickle
@@ -205,7 +205,7 @@ if __name__=="__main__":
   #print >>sys.stderr, 'connecting to %s port %s' % server_address
   sock.connect(server_address)
   try:
-    _thread.start_new_thread(client_listen, ())                                ## Producer thread !!
+    thread.start_new_thread(client_listen, ())                                ## Producer thread !!
     ConsumerThread().start()
 
   except:
