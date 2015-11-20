@@ -84,8 +84,9 @@ class ConsumerThread(Thread):
             for url in request:
               obj = UrlHeader(url)
               obj = obj.sendRequest(opener)
-              obj.checkForNonces()
+
               if obj!=None:
+                obj.checkForNonces()
                 listObjs.append(obj)
             if len(listObjs)!=0:
               result = headerCount ()

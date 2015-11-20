@@ -11,12 +11,15 @@ from threading import Condition
 import csv
 import cPickle as pickle
 import sys, os
+import time
 sys.path.append(os.path.abspath(".."))
 from clientNode import headerCount
 
 clients = list()
 counter = 0  #This variable will hold the number of nodes/clients to which data for processing was sent.
 waitfor = 0  #This variable will hold the number of responses it has received till now.
+response_queue = []
+queue = []
 
 condition = Condition()
 condition_response = Condition()
@@ -40,6 +43,7 @@ def add_client():
         connection.close()
 
 def client_listen():
+    global waitfor
     sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('localhost', 10001)
     sock1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -68,6 +72,9 @@ def client_listen():
 
 def send_clients():
      links = list()
+     global counter
+     global waitfor
+     global resultData
      counter = 0
      waitfor = 0
      resultData = headerCount()
@@ -130,26 +137,33 @@ class ConsumerResponseThread(Thread):
                 condition_response.wait()
                 print "Producer added something to queue and notified the consumer"
             response = response_queue.pop(0)
+            print 'In consumer thread run method \n\n\n\n\n'
             print response
             self.addToResultData(response)
 	    condition_response.release()
             time.sleep(1)
 
     def addToResultData(self,response):
+        global resultData
+        print '\n\n\n\n'
+        print response
         for key,value in response.standardHeaders.iteritems():
             resultData.standardHeaders[key]+=value
         
         for key,value in response.otherHeaders.iteritems():
-            resultData.otherHeaders[key]+=value
+            if resultData.otherHeaders.has_key(key):
+              resultData.otherHeaders[key]+=value
+            else:
+              resultData.otherHeaders[key]=value
 
         for key,value in response.exceptions.iteritems():
-            resultData.exceptions[key].append(value)
+            resultData.exceptions[key].extend(value)
 
         resultData.redirectCount+=response.redirectCount
 
         resultData.countNonces+=response.countNonces
 
-        resultData.noNoncesUrls.append(response.noNoncesUrls)
+        resultData.noNoncesUrls.extend(response.noNoncesUrls)
 
 
     
@@ -158,7 +172,7 @@ def ProducerResponse(response):
     condition_response.acquire()
     length = len(response_queue)
     response_queue.append(response)
-    print "Produced_response", response 
+    #print "Produced_response", response 
     if length == 0:
         print "Notifying"
         condition_response.notify()
@@ -178,15 +192,23 @@ def form():
 
 @app.route('/submit/', methods=['POST'])
 def submit():
+    global waitfor
+    global counter
+    global resultData
     page=request.form['webpage']
     num_pages_to_crawl=request.form['configPage']
     print('reached below crawl')
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
     os.system(command)
+    counter = 0
+    waitfor = 0
     send_clients()
     while counter != waitfor:
+        #print counter
+        #print waitfor
 	continue
+    print 'printing result data'
     print resultData
     headers = ['A','B','C']
     numbers = ['3','2','4']
@@ -200,4 +222,5 @@ def submit():
 if __name__ == "__main__":
     thread.start_new_thread(add_client, () )
     thread.start_new_thread(client_listen, ())
+    ConsumerResponseThread().start()
     app.run()
