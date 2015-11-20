@@ -8,6 +8,9 @@ from threading import Thread, Lock
 from threading import Condition
 import cPickle as pickle
 from bs4 import BeautifulSoup
+import math
+from collections import Counter
+
 queue = []
 condition = Condition()
 
@@ -79,7 +82,9 @@ class ConsumerThread(Thread):
             opener = getUserAgent()
             listObjs = []
             for url in request:
-              obj = sendRequest(opener,url)
+              obj = UrlHeader(url)
+              obj = obj.sendRequest(opener)
+              obj.checkForNonces()
               if obj!=None:
                 listObjs.append(obj)
             if len(listObjs)!=0:
@@ -98,6 +103,12 @@ class ConsumerThread(Thread):
 ################################################################################
 logDir = "./"
 logFilePath = ""
+entropyThreshold = 3.0
+
+def entropy(s):
+  p, lns = Counter(s), float(len(s))
+  return -sum( count/lns * math.log(count/lns, 2) for count in p.values())
+
 
 class UrlHeader(object):
   def __init__(self,url):
@@ -105,7 +116,44 @@ class UrlHeader(object):
     self.url = url.lower()
     self.headers = {}
     self.redirectUrl = ""
-    self.requiredNonce = False 
+    self.requiredNonce = False
+    self.nonceSatisfied = False
+    self.infile  = None
+
+  def sendRequest(self,opener):
+    fp = open(logFilePath,"a")
+    try:
+      self.infile = opener.open(self.url)
+    except Exception as e:
+      errorMessage = str(datetime.datetime.now())+"--"+e.message+"\n"
+      fp.write(errorMessage)
+      return None
+
+    self.redirectUrl = self.infile.geturl()
+    if self.redirectUrl!=self.url:
+      self.redirectFlag = True
+      self.redirectUrl = self.redirectUrl.lower()
+
+    self.headers = self.infile.headers.dict
+    return self
+
+  def checkForNonces(self):
+    page = self.infile.read()
+    soup = BeautifulSoup(page)
+    listOfForms = soup.findAll('form')
+    print listOfForms
+    for form in listOfForms:
+      self.requiredNonce = True
+      inputTags  = form.findAll('input',type="hidden")
+      print inputTags
+      for inputTag in inputTags:
+        if inputTag.has_attr('value'):
+          nonceValue = inputTag['value']
+          entropyValue = entropy(nonceValue)
+          if entropyValue>entropyThreshold:
+            print entropyValue
+            self.nonceSatisfied = True
+
 
 class headerCount(object):
   def __init__(self):
@@ -115,6 +163,9 @@ class headerCount(object):
 
     self.redirectCount =0
     self.stdHeaderNames =set( ['x-frame-options','strict-transport-security','x-content-type-options','content-type','x-xss-protection','cache-control','pragma','expires','x-permitted-cross-domain-policies','content-security-policy'])
+    self.countNonces = 0
+    self.noNoncesUrls = []
+
 
     self.countInit()
     self.exceptionsInit()
@@ -133,6 +184,16 @@ class headerCount(object):
         if 'http' in obj.url and 'https' in obj.redirectUrl:
           self.redirectCount +=1
 
+      print "!!!!!!!!!!!!!!!NOnce!!!!!!!!!!!!"
+      print obj.requiredNonce
+      print obj.nonceSatisfied
+      if obj.requiredNonce:
+        if obj.nonceSatisfied:
+          self.countNonces+=1
+        else:
+          self.noNoncesUrls.append(obj.url)
+        
+
       stdHeaderNamesExist = set()
  
       for key in obj.headers.keys():
@@ -148,6 +209,7 @@ class headerCount(object):
 
       for name in self.stdHeaderNames-stdHeaderNamesExist:
         self.exceptions[name].append(obj.url)
+      
 
   def __str__(self):
     resultString=[]
@@ -159,6 +221,11 @@ class headerCount(object):
     resultString.append(str(self.exceptions))
     resultString.append("~~~~~~~~~~~~~~~~REDIRECTS ~~~~~~~~~~~~~~~~~~~")
     resultString.append(str(self.redirectCount))
+    resultString.append("~~~~~~~~~~~~~~~~NONCES REQUIRED ~~~~~~~~~~~~~")
+    resultString.append(str(self.countNonces))
+    resultString.append("~~~~~~~~~~~~~~~URLS Not satisfying Nonces~~~~~~~~~~~~~~")
+    resultString.append(str(self.noNoncesUrls))
+
     return '\n'.join(resultString)
 
 def getUserAgent():
@@ -166,27 +233,7 @@ def getUserAgent():
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
   return opener
 
-def sendRequest(opener,url):
-  fp = open(logFilePath,"a")
-  try:
-    infile = opener.open(url)
-  except Exception as e:
-    errorMessage = str(datetime.datetime.now())+"--"+e.message+"\n"
-    fp.write(errorMessage)
-    return None
 
-  headerObj  = UrlHeader(url)
-  redirectUrl = infile.geturl()
-  if redirectUrl!=url:
-    headerObj.redirectFlag = True
-    headerObj.redirectUrl = redirectUrl.lower()
-
-  headerObj.headers = infile.headers.dict
-  '''
-  for k,v in infile.headers._headers:
-    headerObj.headers[k]=v
-  '''
-  return headerObj
 
 
     
