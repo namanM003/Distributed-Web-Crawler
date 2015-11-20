@@ -14,6 +14,7 @@ import sys, os
 import time
 sys.path.append(os.path.abspath(".."))
 from clientNode import headerCount
+import validators
 
 clients = list()
 counter = 0  #This variable will hold the number of nodes/clients to which data for processing was sent.
@@ -187,7 +188,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def form():
-    return render_template('template.html')
+    error = None
+    return render_template('template.html',error=error)
 
 
 @app.route('/submit/', methods=['POST'])
@@ -197,6 +199,12 @@ def submit():
     global resultData
     page=request.form['webpage']
     num_pages_to_crawl=request.form['configPage']
+    if not validators.url(page):
+        error = 'Please enter valid URL';
+        return render_template('template.html',error=error)
+    if num_pages_to_crawl == '' or int(num_pages_to_crawl) <= 0 :
+        error = 'Please enter valid number of pages'
+        return render_template('template.html',error=error)
     print('reached below crawl')
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
@@ -210,6 +218,7 @@ def submit():
 	continue
     print 'printing result data'
     print resultData
+
     headers = ['A','B','C']
     numbers = ['3','2','4']
     headersPages = {'headers':headers,'numbers':numbers}
