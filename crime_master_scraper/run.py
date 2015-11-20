@@ -13,9 +13,16 @@ import cPickle as pickle
 import sys, os
 sys.path.append(os.path.abspath(".."))
 from clientNode import headerCount
+
 clients = list()
 counter = 0  #This variable will hold the number of nodes/clients to which data for processing was sent.
 waitfor = 0  #This variable will hold the number of responses it has received till now.
+
+condition = Condition()
+condition_response = Condition()
+
+resultData = None
+
 def add_client():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('localhost', 10000)
@@ -31,23 +38,7 @@ def add_client():
 	#logger.info("New Client added : " + str(client_address))
         print(client_address)
         connection.close()
-        #try:
-            #print >>sys.stderr, 'connection from', client_address
-    
-            # Receive the data in small chunks and retransmit it
-            #while True:
-                #data = connection.recv(100)
-                #print >>sys.stderr, 'received "%s"' % data
-                #if data:
-                    #print >>sys.stderr, 'sending data back to the client'
-                    #connection.sendall(data)
-                #else:
-                    #print >>sys.stderr, 'no more data from', client_address
-                    #break
-                
-        #finally:
-            # Clean up the connection
-        # Create a TCP/IP socket
+
 def client_listen():
     sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('localhost', 10001)
@@ -66,9 +57,9 @@ def client_listen():
 	    response = pickle.loads(data)
 	    #print >>sys.stderr, 'received "%s"' % response.result_dict
             print " Got Response "
-            print response
+            #print response
             waitfor = waitfor + 1
-	    #ProducerResponse(response);
+	    ProducerResponse(response);
                 
         finally:
             # Clean up the connection
@@ -79,6 +70,7 @@ def send_clients():
      links = list()
      counter = 0
      waitfor = 0
+     resultData = headerCount()
      print("in send clients")
      with open('links.csv') as f:
         content = f.readlines()
@@ -139,8 +131,27 @@ class ConsumerResponseThread(Thread):
                 print "Producer added something to queue and notified the consumer"
             response = response_queue.pop(0)
             print response
+            self.addToResultData(response)
 	    condition_response.release()
             time.sleep(1)
+
+    def addToResultData(self,response):
+        for key,value in response.standardHeaders.iteritems():
+            resultData.standardHeaders[key]+=value
+        
+        for key,value in response.otherHeaders.iteritems():
+            resultData.otherHeaders[key]+=value
+
+        for key,value in response.exceptions.iteritems():
+            resultData.exceptions[key].append(value)
+
+        resultData.redirectCount+=response.redirectCount
+
+        resultData.countNonces+=response.countNonces
+
+        resultData.noNoncesUrls.append(response.noNoncesUrls)
+
+
     
 def ProducerResponse(response):
     global response_queue   
@@ -174,6 +185,9 @@ def submit():
     print(command)
     os.system(command)
     send_clients()
+    while counter != waitfor:
+	continue
+    print resultData
     headers = ['A','B','C']
     numbers = ['3','2','4']
     headersPages = {'headers':headers,'numbers':numbers}
