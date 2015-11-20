@@ -16,7 +16,7 @@ def server_send(response):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_address = ('localhost', 10001)
-        
+        print "connected to server" 
         #print >>sys.stderr, 'starting up on %s port %s' % client_address
         
         sock.connect(server_address)  

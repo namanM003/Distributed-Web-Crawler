@@ -2,3 +2,7 @@ crime_master_scraper/__init__.pyc
 crime_master_scraper/settings.pyc
 crime_master_scraper/spiders/__init__.pyc
 crime_master_scraper/spiders/same_domain_scraper.pyc
+crime_master_scraper/crime_master_scraper/__init__.pyc
+crime_master_scraper/crime_master_scraper/settings.pyc
+crime_master_scraper/crime_master_scraper/spiders/__init__.pyc
+crime_master_scraper/crime_master_scraper/spiders/same_domain_scraper.pyc

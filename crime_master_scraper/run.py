@@ -10,6 +10,9 @@ from threading import Thread, Lock
 from threading import Condition
 import csv
 import cPickle as pickle
+import sys, os
+sys.path.append(os.path.abspath(".."))
+from clientNode import headerCount
 clients = list()
 
 def add_client():
@@ -49,7 +52,7 @@ def client_listen():
     server_address = ('localhost', 10001)
     sock1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock1.bind(server_address)
-    
+    print "thread started in client_listen" 
     sock1.listen(5)
     while True:
         # Wait for a connection
@@ -61,8 +64,9 @@ def client_listen():
             data = connection.recv(11000)
 	    response = pickle.loads(data)
 	    #print >>sys.stderr, 'received "%s"' % response.result_dict
-            #print " Got Response " + str(response.result_dict)
-	    ProducerResponse(response);
+            print " Got Response "
+            print response
+	    #ProducerResponse(response);
                 
         finally:
             # Clean up the connection
@@ -107,7 +111,8 @@ def send_clients():
 ################################################################################
  
 def Producer(request):
-    global queue   
+    global queue
+    print "in produver"   
     condition.acquire()
     length = len(queue)
     queue.append(request)
@@ -174,4 +179,5 @@ def submit():
 
 if __name__ == "__main__":
     thread.start_new_thread(add_client, () )
+    thread.start_new_thread(client_listen, ())
     app.run()
