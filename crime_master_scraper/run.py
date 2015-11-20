@@ -14,7 +14,8 @@ import sys, os
 sys.path.append(os.path.abspath(".."))
 from clientNode import headerCount
 clients = list()
-
+counter = 0  #This variable will hold the number of nodes/clients to which data for processing was sent.
+waitfor = 0  #This variable will hold the number of responses it has received till now.
 def add_client():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('localhost', 10000)
@@ -66,6 +67,7 @@ def client_listen():
 	    #print >>sys.stderr, 'received "%s"' % response.result_dict
             print " Got Response "
             print response
+            waitfor = waitfor + 1
 	    #ProducerResponse(response);
                 
         finally:
@@ -75,7 +77,8 @@ def client_listen():
 
 def send_clients():
      links = list()
-
+     counter = 0
+     waitfor = 0
      print("in send clients")
      with open('links.csv') as f:
         content = f.readlines()
@@ -94,6 +97,7 @@ def send_clients():
      z = 0
      for client in clients:
        print client
+       counter = counter + 1
        data = []
        for i in range(z,min(z+x,len(links))):
          data.append(links[i])
@@ -106,6 +110,8 @@ def send_clients():
        print("Data sent") 
        sock.close()
        z = z+x
+       if z >= len(links):
+         break
 
 
 ################################################################################
@@ -162,7 +168,7 @@ def form():
 @app.route('/submit/', methods=['POST'])
 def submit():
     page=request.form['webpage']
-    num_pages_to_crawl=1
+    num_pages_to_crawl=request.form['configPage']
     print('reached below crawl')
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
     print(command)
