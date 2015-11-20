@@ -127,6 +127,7 @@ class ConsumerResponseThread(Thread):
                 condition_response.wait()
                 print "Producer added something to queue and notified the consumer"
             response = response_queue.pop(0)
+            print response
 	    condition_response.release()
             time.sleep(1)
     
