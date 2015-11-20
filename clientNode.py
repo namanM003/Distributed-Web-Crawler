@@ -141,17 +141,14 @@ class UrlHeader(object):
     page = self.infile.read()
     soup = BeautifulSoup(page)
     listOfForms = soup.findAll('form')
-    print listOfForms
     for form in listOfForms:
       self.requiredNonce = True
       inputTags  = form.findAll('input',type="hidden")
-      print inputTags
       for inputTag in inputTags:
         if inputTag.has_attr('value'):
           nonceValue = inputTag['value']
           entropyValue = entropy(nonceValue)
           if entropyValue>entropyThreshold:
-            print entropyValue
             self.nonceSatisfied = True
 
 
@@ -184,9 +181,6 @@ class headerCount(object):
         if 'http' in obj.url and 'https' in obj.redirectUrl:
           self.redirectCount +=1
 
-      print "!!!!!!!!!!!!!!!NOnce!!!!!!!!!!!!"
-      print obj.requiredNonce
-      print obj.nonceSatisfied
       if obj.requiredNonce:
         if obj.nonceSatisfied:
           self.countNonces+=1
