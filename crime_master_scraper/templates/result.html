@@ -1,11 +1,16 @@
 <html>
     <head>
         <title>Web Crawler</title>
+        <meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
     </head>
     <body>
     	<h1 align='center'> Results </h1>
-        <p> Configurable links to {{page}} are stored in links.csv </p><br/>
-        <br/>
+    	{% if error %}
+        <p style="color:red"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+        <!--<p> Configurable links to {{page}} are stored in links.csv </p><br/>-->
+        <!--<br/>
 		<br/>
         <table border="1" style="width:50%">
 		  	{% for row_index in range(headersPages['headers']|count) %}
@@ -14,13 +19,14 @@
 			      	<td>{{ headersPages['numbers'][row_index] }}</td>
 			    </tr>
 			{% endfor %}
-		</table>
+		</table>-->
 		<br/>
 		<br/>
-		  	{% for row_index in range(missingpagesList|count) %}
+		<!--<p>Dict value: {{headersPages['x-xss-protection']}} </p>-->
+		  	<!--{% for key, value in headersPages.iteritems() %}
 		  	<table border="1" style="width:50%">
 		  		<tr>
-		  			<th>{{missingpagesList[row_index]['headerName']}}</th>
+		  			<th>{{key}}</th>
 				</tr>
 				{% for row_index1 in range(missingpagesList[row_index]['pages']|count) %}
 				<tr>
@@ -29,6 +35,7 @@
 			    {% endfor %}
 			</table>
 			<br/>
-			{% endfor %}
+			{% endfor %}-->
     </body>
+
 </html>

@@ -226,7 +226,20 @@ def submit():
     						{'headerName':'B','pages':['example.com/a','wassup.com/hi']},
     						{'headerName':'C','pages':['example.com/a','example.com/b','wassup.com/hello','wassup.com/hi']}
     					]
-    return render_template('result.html', page=page, headersPages=headersPages, missingpagesList=missingpagesList)
+    print "Standard Headers"
+    print resultData.standardHeaders
+
+    #resultList = [result.as_dict() for result in resultData]
+
+    #print "Result List"
+    #print resultList
+    try:
+        return render_template('result.html', page=page, headersPages=resultData.standardHeaders, otherHeaders=resultData.otherHeaders, missingpagesList=resultData.exceptions)
+    except Exception as e:
+        print "Error" + str(e)
+        return render_template("result.html", error=str(e))
+
+    #return render_template('result.html',page=page)
 
 if __name__ == "__main__":
     thread.start_new_thread(add_client, () )
