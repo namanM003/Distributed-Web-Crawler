@@ -1,16 +1,32 @@
 <html>
     <head>
         <title>Web Crawler</title>
-        <meta http-equiv="cache-control" content="max-age=0" />
-		<meta http-equiv="cache-control" content="no-cache" />
+        <!--<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />-->
     </head>
     <body>
     	<h1 align='center'> Results </h1>
-    	{% if error %}
-        <p style="color:red"><strong>Error:</strong> {{ error }}</p>
+    	<!--{% if error %}
+        <p style="color:red"><strong>Error:</strong></p>
         {% endif %}
-        <!--<p> Configurable links to {{page}} are stored in links.csv </p><br/>-->
-        <!--<br/>
+        <p> Configurable links to {{page}} are stored in links.csv </p><br/>
+    	<h1 align='center'> Results </h1>
+    	{% if page %}
+        <p style="color:red"><strong>Page:</strong></p>
+        {% endif %}
+    	<h1 align='center'> Results </h1>
+    	{% if headersPages %}
+        <p style="color:red"><strong>headersPages</strong></p>
+        {% endif %}
+    	<h1 align='center'> Results </h1>
+    	{% if otherHeaders %}
+        <p style="color:red"><strong>otherHeaders</strong></p>
+        {% endif %}
+    	<h1 align='center'> Results </h1>
+    	{% if missingpagesList %}
+        <p style="color:red"><strong>missing:</strong></p>
+        {% endif %}
+        <br/>
 		<br/>
         <table border="1" style="width:50%">
 		  	{% for row_index in range(headersPages['headers']|count) %}
