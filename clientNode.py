@@ -122,12 +122,13 @@ class UrlHeader(object):
     self.infile  = None
 
   def sendRequest(self,opener):
-    fp = open(logFilePath,"a")
+    #fp = open(logFilePath,"a")
     try:
       self.infile = opener.open(self.url)
     except Exception as e:
       errorMessage = str(datetime.datetime.now())+"--"+e.message+"\n"
-      fp.write(errorMessage)
+     #fp.write(errorMessage)
+      print errorMessage
       return None
 
     self.redirectUrl = self.infile.geturl()
@@ -152,6 +153,15 @@ class UrlHeader(object):
           if entropyValue>entropyThreshold:
             self.nonceSatisfied = True
 
+  def checkAnticlickJacking(self):
+    stdValues = ['sameorigin','deny','allow-from']
+    headerValue = self.headers['x-frame-options'].strip().lower()
+    return any(x in headerValue for x in stdValues)
+  
+  def checkSecureCookies(self):
+    stdValues = ['httponly','secure']
+    headerValue = self.headers['set-cookie'].strip().lower()
+    return all(x in headerValue for x in stdValues)
 
 class headerCount(object):
   def __init__(self):
@@ -160,7 +170,7 @@ class headerCount(object):
     self.exceptions={}
 
     self.redirectCount =0
-    self.stdHeaderNames =set( ['x-frame-options','strict-transport-security','x-content-type-options','content-type','x-xss-protection','cache-control','pragma','expires','x-permitted-cross-domain-policies','content-security-policy'])
+    self.stdHeaderNames =set( ['x-frame-options','strict-transport-security','x-content-type-options','content-type','x-xss-protection','cache-control','pragma','expires','x-permitted-cross-domain-policies','content-security-policy','set-cookie'])
     self.countNonces = 0
     self.noNoncesUrls = []
 
@@ -190,10 +200,23 @@ class headerCount(object):
         
 
       stdHeaderNamesExist = set()
+      cookieRequired = False
  
       for key in obj.headers.keys():
-        headerName = key.lower()
+        headerName = key.strip().lower()
+        print headerName
         if headerName in self.standardHeaders:
+          if headerName == 'x-frame-options':
+            #check for anticlick jacking
+            if not obj.checkAnticlickJacking():
+              continue
+
+          if headerName =='set-cookie':
+            #check for secure cookies
+            cookieRequired = True
+            if not obj.checkSecureCookies():
+              continue
+
           stdHeaderNamesExist.add(headerName)
           self.standardHeaders[headerName]+=1
         else:
@@ -203,7 +226,9 @@ class headerCount(object):
             self.otherHeaders[headerName]=1
 
       for name in self.stdHeaderNames-stdHeaderNamesExist:
-        self.exceptions[name].append(obj.url)
+        if name=='set-cookie' and not cookieRequired:
+          continue
+        self.exceptions[name].append(obj.url.strip())
       
   
   def __str__(self):
