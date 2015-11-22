@@ -35,7 +35,7 @@ class MySpider(CrawlSpider):
         self.start_urls = [start_url]
 
 	self.num_pages_to_crawl = num_pages_to_crawl
-	self.num_pages_crawled = 0
+	self.num_pages_crawled = 1
 
         #Extract domain-name of the start_url. To restrict to the domain, scrapy expects domain name to be of pattern "google.com".
         #Hence, the additional https:// and / tags needs to be removed.
