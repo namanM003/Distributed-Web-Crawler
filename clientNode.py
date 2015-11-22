@@ -122,13 +122,12 @@ class UrlHeader(object):
     self.infile  = None
 
   def sendRequest(self,opener):
-    #fp = open(logFilePath,"a")
+    fp = open(logFilePath,"a")
     try:
       self.infile = opener.open(self.url)
     except Exception as e:
       errorMessage = str(datetime.datetime.now())+"--"+e.message+"\n"
-     #fp.write(errorMessage)
-      print errorMessage
+      fp.write(errorMessage)
       return None
 
     self.redirectUrl = self.infile.geturl()
@@ -204,7 +203,6 @@ class headerCount(object):
  
       for key in obj.headers.keys():
         headerName = key.strip().lower()
-        print headerName
         if headerName in self.standardHeaders:
           if headerName == 'x-frame-options':
             #check for anticlick jacking
