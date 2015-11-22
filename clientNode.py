@@ -205,7 +205,7 @@ class headerCount(object):
       for name in self.stdHeaderNames-stdHeaderNamesExist:
         self.exceptions[name].append(obj.url)
       
-  '''
+  
   def __str__(self):
     resultString=[]
     resultString.append("~~~~~~~~~~~~~~~STANDARD HEADERS~~~~~~~~~~~~~~")
@@ -222,7 +222,7 @@ class headerCount(object):
     resultString.append(str(self.noNoncesUrls))
 
     return '\n'.join(resultString)
-  '''
+  
 def getUserAgent():
   opener = urllib2.build_opener()
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]

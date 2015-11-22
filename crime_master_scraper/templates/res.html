@@ -1,0 +1,114 @@
+<html>
+   <head>
+        <title>Web Crawler</title>
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/result.css') }}">
+    </head>
+
+
+<body>
+
+<h1 align='center'> Results </h1>
+
+	<table>
+  		<th colspan="2">Standard Headers</th>
+		{% for key, value in standardHeaders.iteritems() %}
+		<tr>
+	      		<td>{{ key }}</td>
+	      		<td>{{ standardHeaders[key]|tojson|safe }}</td>
+	    	</tr>
+	    	{% endfor %}
+	</table>
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+	<br/>
+
+
+	{% for key, value in standardHeaders.iteritems() %}
+  	<table>
+  		<th>{{key}}</th>
+		{% for exceptionVal in range(exceptions[key]|count) %}
+		<tr>
+	      		<td>{{ exceptions[key][exceptionVal]|tojson|safe }}</td>
+	    	</tr>
+	    	{% endfor %}
+	</table>
+	<br/>
+	<br/>
+	{% endfor %}
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+	<br/>
+
+
+	<table>
+  		<th colspan="2">Other Headers</th>
+		{% for key, value in otherHeaders.iteritems() %}
+		<tr>
+		      <td>{{ key }}</td>
+		      <td>{{ otherHeaders[key]|tojson|safe }}</td>
+	    	</tr>
+	    	{% endfor %}
+	</table>
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+	<br/>
+
+
+	<table>
+		<th colspan="2">Redirect URL</th>
+		<tr>
+			<td>Number of URLs redirected</td>
+	      		<td>{{ redirects }}</td>
+	    	</tr>
+	</table>
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+	<br/>
+
+
+	<table>
+		<th colspan="2">Nonces</th>
+		<tr>
+	      		<td>Number of forms containing nonces</td>
+	      		<td>{{ countNonces }}</td>
+	    	</tr>
+	</table>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+
+  	<table>
+  		<th>No Nonces</th>
+		{% for noNonceURL in range(noNonce|count) %}
+		<tr>
+	      		<td>{{ noNonce[noNonceURL]}}</td>
+	    	</tr>
+	    	{% endfor %}
+	</table>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+</body>
+</html>
