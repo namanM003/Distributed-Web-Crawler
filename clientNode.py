@@ -160,7 +160,7 @@ class headerCount(object):
     self.exceptions={}
 
     self.redirectCount =0
-    self.stdHeaderNames =set( ['x-frame-options','strict-transport-security','x-content-type-options','content-type','x-xss-protection','cache-control','pragma','expires','x-permitted-cross-domain-policies','content-security-policy'])
+    self.stdHeaderNames =set( ['x-frame-options','strict-transport-security','x-content-type-options', 'content-type','x-xss-protection','cache-control','pragma','expires','x-permitted-cross-domain-policies','content-security-policy', 'set-cookie'])
     self.countNonces = 0
     self.noNoncesUrls = []
 
