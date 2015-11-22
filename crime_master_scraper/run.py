@@ -205,11 +205,12 @@ def submit():
     if num_pages_to_crawl == '' or int(num_pages_to_crawl) <= 0 :
         error = 'Please enter valid number of pages'
         return render_template('template.html',error=error)
-    print('reached below crawl')
     os.system('rm links.csv')
     command = "scrapy crawl crime_master -a start_url="+page+" -a num_pages_to_crawl=" + str(num_pages_to_crawl) + " -o links.csv -t csv"
-    print(command)
     os.system(command)
+    with open('links.csv','a') as f:
+        f.write(page)
+    f.close()
     counter = 0
     waitfor = 0
     send_clients()
