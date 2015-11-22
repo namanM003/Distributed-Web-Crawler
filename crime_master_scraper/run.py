@@ -82,7 +82,6 @@ def send_clients():
      print("in send clients")
      with open('links.csv') as f:
         content = f.readlines()
-     print(content)
      for row in content:
          if row.strip() != 'link':
              links.append(row)
@@ -218,6 +217,7 @@ def submit():
         #print counter
         #print waitfor
 	continue
+    '''
     print 'printing result data'
     print resultData
 
@@ -240,7 +240,7 @@ def submit():
 
     print "No Nonces URLs"
     print resultData.noNoncesUrls
-
+    '''
     try:
          #return render_template("res.html",url=page,standardHeaders = resultData.standardHeaders,otherHeaders = resultData.otherHeaders,exceptions=resultData.exceptions,redirects = resultData.redirectCount, stdHeadernames = resultData.stdHeaderNames,countNonces=resultData.countNonces,noNonce = resultData.noNoncesUrls)
         

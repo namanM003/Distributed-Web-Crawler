@@ -1,0 +1,38 @@
+.divContent {
+	margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.imgWebCrawler {
+	width: 75px;
+    height: 75px;
+    float: left;
+    padding-left: 50px;
+}
+
+
+.thWebCrawler {
+	position: relative;
+    font-size: 50px;
+}
+
+
+.inputFields {
+	text-align: left;
+}
+
+
+table {
+	border-spacing: 50px;
+	font-size: 18px;
+    color: #3f3f3f;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.submit {
+	font-size:14px; 
+	color: #3f3f3f;
+}

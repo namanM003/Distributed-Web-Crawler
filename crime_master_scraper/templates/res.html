@@ -17,7 +17,7 @@
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -59,7 +59,7 @@
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -103,7 +103,7 @@
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -146,7 +146,7 @@
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -193,12 +193,6 @@
 				<th class = "thHeaderName">Number of forms containing nonces</th>
 		      	<th class = "thUrlCount">{{ countNonces }}</th>
 			</thead>
-			<!--<tbody>
-				<tr>
-		      		<td class = "headerName">Number of forms containing nonces</td>
-		      		<td class = "urlCount">{{ countNonces }}</td>
-		    	</tr>
-		    </tbody>-->
 		</table>
 	</div>
 	<br/>
@@ -234,7 +228,7 @@
 		<table>
 			<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number Of Pages Satisfying </th>
 	  		</thead>
 	  		<tbody>
 			{% for key, value in standardHeaders.iteritems() %}			
@@ -254,16 +248,16 @@
 	<br/>
 
 	
-		<h2><u> Exception List </u></h2> <br/>
+		<h2><u> Vulnerable Pages </u></h2> <br/>
 		{% for key, value in standardHeaders.iteritems() %}
 		<div class = "divTable">
 	  	<table>
 	  		<thead class = "tHeading">
-	  			<th>{{key}}</th>
+	  			<th class = "thVulnerablePages">{{key}}</th>
 	  		</thead>
 			<tbody>
 			{% for exceptionVal in range(exceptions[key]|count) %}
-				<tr>
+				<tr class = "vulnerablePages">
 		      		<td class = "headerName">{{ exceptions[key][exceptionVal]|tojson|safe }}</td>
 		    	</tr>
 		    	{% endfor %}
@@ -286,7 +280,7 @@
 		<table>
 			<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number Of Pages Satisfying </th>
 	  		</thead>
 			{% for key, value in otherHeaders.iteritems() %}
 			<tbody>
@@ -312,12 +306,6 @@
 				<th class = "thHeaderName">Number of URLs redirected</th>
 		      	<th class = "thUrlCount">{{ redirects }}</th>
 			</thead>
-			<!--<tbody>
-				<tr>
-					<td class = "headerName">Number of URLs redirected</td>
-		      		<td class = "urlCount">{{ redirects }}</td>
-		    	</tr>
-		    </tbody>-->
 		</table>
 	</div>
 	<br/>

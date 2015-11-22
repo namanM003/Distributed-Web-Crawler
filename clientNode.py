@@ -94,7 +94,6 @@ class ConsumerThread(Thread):
             else:
               print("Consumed but didnt get relevant results")
               continue
-            print result
             #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
