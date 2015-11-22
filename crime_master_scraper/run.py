@@ -40,7 +40,7 @@ def add_client():
         connection, client_address = sock.accept()
         clients.append(client_address)
 	#logger.info("New Client added : " + str(client_address))
-        print(client_address)
+        #print(client_address)
         connection.close()
 
 def client_listen():
@@ -55,7 +55,7 @@ def client_listen():
         # Wait for a connection
         connection, client_address = sock1.accept()
         try:
-            print >>sys.stderr, 'connection from', client_address
+            #print >>sys.stderr, 'connection from', client_address
     
             # Receive the data in small chunks and retransmit it
             data = connection.recv(11000)
@@ -139,7 +139,7 @@ class ConsumerResponseThread(Thread):
                 print "Producer added something to queue and notified the consumer"
             response = response_queue.pop(0)
             print 'In consumer thread run method \n\n\n\n\n'
-            print response
+            #print response
             self.addToResultData(response)
 	    condition_response.release()
             time.sleep(1)
@@ -147,7 +147,7 @@ class ConsumerResponseThread(Thread):
     def addToResultData(self,response):
         global resultData
         print '\n\n\n\n'
-        print response
+        #print response
         for key,value in response.standardHeaders.iteritems():
             resultData.standardHeaders[key]+=value
         
@@ -221,25 +221,34 @@ def submit():
     print 'printing result data'
     print resultData
 
-    headers = ['A','B','C']
-    numbers = ['3','2','4']
-    headersPages = {'headers':headers,'numbers':numbers}
-    missingpagesList = [	{'headerName':'A','pages':['example.com/a','example.com/b','wassup.com/hello']},
-    						{'headerName':'B','pages':['example.com/a','wassup.com/hi']},
-    						{'headerName':'C','pages':['example.com/a','example.com/b','wassup.com/hello','wassup.com/hi']}
-    					]
     print "Standard Headers"
     print resultData.standardHeaders
 
     #resultList = [result.as_dict() for result in resultData]
 
-    #print "Result List"
-    #print resultList
+    print "Other Headers"
+    print resultData.otherHeaders
+
+    print "Exception"
+    print resultData.exceptions
+
+    print "Redirects"
+    print resultData.redirectCount
+
+    print "Nonces Count"
+    print resultData.countNonces
+
+    print "No Nonces URLs"
+    print resultData.noNoncesUrls
+
     try:
-        return render_template('result.html', page=page, headersPages=resultData.standardHeaders, otherHeaders=resultData.otherHeaders, missingpagesList=resultData.exceptions)
+         #return render_template("res.html",url=page,standardHeaders = resultData.standardHeaders,otherHeaders = resultData.otherHeaders,exceptions=resultData.exceptions,redirects = resultData.redirectCount, stdHeadernames = resultData.stdHeaderNames,countNonces=resultData.countNonces,noNonce = resultData.noNoncesUrls)
+        
+         return render_template("res.html",url=page,standardHeaders = resultData.standardHeaders,otherHeaders = resultData.otherHeaders,exceptions=resultData.exceptions,redirects = resultData.redirectCount, stdHeadernames = resultData.stdHeaderNames,countNonces=resultData.countNonces,noNonce = resultData.noNoncesUrls)
+        #return render_template('result.html', page=page, headersPages=resultData.standardHeaders, otherHeaders=resultData.otherHeaders, error="error", missingpagesList=resultData.exceptions)
     except Exception as e:
         print "Error" + str(e)
-        return render_template("result.html", error=str(e))
+        #return render_template("result.html", error=str(e))
 
     #return render_template('result.html',page=page)
 
