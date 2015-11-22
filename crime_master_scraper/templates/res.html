@@ -13,11 +13,12 @@
 
 
 	<div class = "divTable">
-		<h2><u> Content-Security Policy </u></h2> <br/>
+		<h2><u> Content-Security Policy </u></h2>
+		<center><i>Content Security Policy is a security policy which prevents cross-site scripting, clickjacking and code injection attacks resulted from malicious content execution in web page </i></center><br/><br/>
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -55,11 +56,12 @@
 
 
 	<div class = "divTable">
-		<h2><u> HTTP Strict Transport Policy</u></h2> <br/>
+		<h2><u> HTTP Strict Transport Policy</u></h2> 
+		<center><i>HTTP Strict Transport Security is a security policy which protect secure HTTPS websites against downgrade attacks and cookie hijacking </i></center><br/><br/>
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -99,11 +101,12 @@
 
 
 	<div class = "divTable">
-		<h2><u> HttpOnly and Secure Cookies </u></h2> <br/>
+		<h2><u> HttpOnly and Secure Cookies </u></h2>
+		<center><i>HTTP Strict Transport Security is a security policy which protect secure HTTPS websites against downgrade attacks and cookie hijacking</i></center><br/><br/>
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -142,11 +145,12 @@
 
 
 	<div class = "divTable">
-		<h2><u> Anticlickjacking headers (X-Frame-Options) </u></h2> <br/>
+		<h2><u> Anticlickjacking headers (X-Frame-Options) </u></h2> 
+		<center><i>X-Frame-Options header allows or disallows rendering of the document when inside an iframe</i></center><br/><br/>
 	  	<table>
 	  		<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number of pages satisfying </th>
 	  		</thead>
 			<tbody>
 		      	<tr>
@@ -193,12 +197,6 @@
 				<th class = "thHeaderName">Number of forms containing nonces</th>
 		      	<th class = "thUrlCount">{{ countNonces }}</th>
 			</thead>
-			<!--<tbody>
-				<tr>
-		      		<td class = "headerName">Number of forms containing nonces</td>
-		      		<td class = "urlCount">{{ countNonces }}</td>
-		    	</tr>
-		    </tbody>-->
 		</table>
 	</div>
 	<br/>
@@ -234,7 +232,7 @@
 		<table>
 			<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number Of Pages Satisfying </th>
 	  		</thead>
 	  		<tbody>
 			{% for key, value in standardHeaders.iteritems() %}			
@@ -254,16 +252,16 @@
 	<br/>
 
 	
-		<h2><u> Exception List </u></h2> <br/>
+		<h2><u> Vulnerable Pages </u></h2> <br/>
 		{% for key, value in standardHeaders.iteritems() %}
 		<div class = "divTable">
 	  	<table>
 	  		<thead class = "tHeading">
-	  			<th>{{key}}</th>
+	  			<th class = "thVulnerablePages">{{key}}</th>
 	  		</thead>
 			<tbody>
 			{% for exceptionVal in range(exceptions[key]|count) %}
-				<tr>
+				<tr class = "vulnerablePages">
 		      		<td class = "headerName">{{ exceptions[key][exceptionVal]|tojson|safe }}</td>
 		    	</tr>
 		    	{% endfor %}
@@ -286,7 +284,7 @@
 		<table>
 			<thead class = "tHeading">
 	  			<th> Header Name </th> 
-	  			<th> URL Count </th>
+	  			<th> Number Of Pages Satisfying </th>
 	  		</thead>
 			{% for key, value in otherHeaders.iteritems() %}
 			<tbody>
@@ -312,12 +310,6 @@
 				<th class = "thHeaderName">Number of URLs redirected</th>
 		      	<th class = "thUrlCount">{{ redirects }}</th>
 			</thead>
-			<!--<tbody>
-				<tr>
-					<td class = "headerName">Number of URLs redirected</td>
-		      		<td class = "urlCount">{{ redirects }}</td>
-		    	</tr>
-		    </tbody>-->
 		</table>
 	</div>
 	<br/>
