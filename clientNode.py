@@ -191,10 +191,18 @@ class UrlHeader(object):
         
 
     return maxAgePresent 
+  
+  def checkContentSecurityPolicy(self):
+    headerValue = self.headers['content-security-policy'].strip().lower()  
+    print headerValue
+    stdValues = ['none','self','https']
+
+    values = headerValue.split(';')
+    for val in values:
+      if 'default-src' in val:
+        return any(x in val for x in stdValues)
         
-       
-        
-          
+    return False          
         
 
 
@@ -254,6 +262,11 @@ class headerCount(object):
           if headerName == 'strict-transport-security':
             #check for strict transport policy
             if not obj.checkStrictTransportPolicy():
+              continue
+
+          if headerName == 'content-security-policy':
+            #check for content security policy
+            if not obj.checkContentSecurityPolicy():
               continue
 
           stdHeaderNamesExist.add(headerName)
