@@ -1,18 +1,44 @@
 <html>
     <head>
         <title>Web Crawler</title>
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/template.css') }}">
     </head>
     <body>
-        {% if error %}
-        <p style="color:red"><strong>Error:</strong> {{ error }}</p>
-        {% endif %}
         <form method="post" action="{{ url_for('submit') }}">
-            <label for="webpage">Please enter the start Web Page</label>
-            <input type="text" name="webpage" /><br /><br/ >
-            </br>
-            <label for="configPage">Please enter the number of configurable pages</label>
-            <input type="text" name="configPage" /><br /><br/ >
-            <input type="submit" />
+            <div class="divContent">
+                <img src="{{ url_for('static',filename='images/Webcrawler.png') }}" alt="web Crawler" class= "imgWebCrawler">
+                <h1 class= "thWebCrawler">Distributed Web Crawler</h1>
+
+                <br/><br/>
+
+                <div class = "inputFields">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><label for="webpage">Please enter the start Web Page</label></td>
+                                <td><input type="text" name="webpage" placeholder="https://www.google.com"/></td>
+                            </tr>
+                            <tr>
+                                <td><label for="configPage">Please enter the number of configurable pages</label></td>
+                                <td><input type="number" name="configPage" min="1" placeholder="1"/></td>
+                            </tr>
+                            {% if error %}
+                            <tr>
+                                <td>
+                                    <p style="color:red"><strong>Error:</strong> {{ error }}</p>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <br/><br/><br/>
+
+                <input type="submit" class = "submit"/>
+            </div>
         </form>
     </body>
 </html>

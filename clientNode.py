@@ -94,7 +94,6 @@ class ConsumerThread(Thread):
             else:
               print("Consumed but didnt get relevant results")
               continue
-            print result
             #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
@@ -114,7 +113,7 @@ def entropy(s):
 class UrlHeader(object):
   def __init__(self,url):
     self.redirectFlag = False
-    self.url = url.lower()
+    self.url = url.strip().lower()
     self.headers = {}
     self.redirectUrl = ""
     self.requiredNonce = False
@@ -147,7 +146,7 @@ class UrlHeader(object):
       inputTags  = form.findAll('input',type="hidden")
       for inputTag in inputTags:
         if inputTag.has_attr('value'):
-          nonceValue = inputTag['value']
+          nonceValue = inputTag['value'].strip()
           entropyValue = entropy(nonceValue)
           if entropyValue>entropyThreshold:
             self.nonceSatisfied = True
@@ -161,6 +160,42 @@ class UrlHeader(object):
     stdValues = ['httponly','secure']
     headerValue = self.headers['set-cookie'].strip().lower()
     return all(x in headerValue for x in stdValues)
+
+  def checkStrictTransportPolicy(self):
+    headerValue = self.headers['strict-transport-security'].strip().lower()
+
+    if 'includesubdomains' not in headerValue:
+      return False
+    
+    maxAgePresent = False
+    values = headerValue.split(';')
+    for val in values:
+      val = val.strip()
+      if 'max-age' in val:
+        maxAgePresent = True
+        numericValues = val.split('=')
+        if len(numericValues)<2:
+          return False
+        
+        try:
+          seconds = float(numericValues[1].strip())
+        except Exception,e:
+          print "Not able to parse max-age in strict transport policy: ",e.message
+          return False
+        
+        if seconds<=0:
+          return False
+        else:
+          break
+        
+
+    return maxAgePresent 
+        
+       
+        
+          
+        
+
 
 class headerCount(object):
   def __init__(self):
@@ -213,6 +248,11 @@ class headerCount(object):
             #check for secure cookies
             cookieRequired = True
             if not obj.checkSecureCookies():
+              continue
+
+          if headerName == 'strict-transport-security':
+            #check for strict transport policy
+            if not obj.checkStrictTransportPolicy():
               continue
 
           stdHeaderNamesExist.add(headerName)
