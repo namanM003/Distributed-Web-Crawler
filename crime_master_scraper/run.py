@@ -199,10 +199,14 @@ def submit():
     global resultData
     page=request.form['webpage']
     num_pages_to_crawl=request.form['configPage']
+    num_pages_to_crawl_float = float(num_pages_to_crawl)
     if not validators.url(page):
         error = 'Please enter valid URL';
         return render_template('template.html',error=error)
-    if num_pages_to_crawl == '' or int(num_pages_to_crawl) <= 0 :
+    if num_pages_to_crawl == '' or float(num_pages_to_crawl) <= 0 :
+        error = 'Please enter valid number of pages'
+        return render_template('template.html',error=error)
+    if not num_pages_to_crawl_float.is_integer():
         error = 'Please enter valid number of pages'
         return render_template('template.html',error=error)
     os.system('rm links.csv')
