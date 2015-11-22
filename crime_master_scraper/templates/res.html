@@ -30,6 +30,24 @@
 	<br/>
 	<br/>
 
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+	  		<tbody>
+			{% for exceptionVal in range(exceptions['content-security-policy']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['content-security-policy'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
 	<hr>	
 
 	<br/>
@@ -48,6 +66,24 @@
 		      		<td class = "headerName">strict-transport-security</td>
 		      		<td class = "urlCount">{{ standardHeaders['strict-transport-security'] }}</td>
 		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+	  		<tbody>
+			{% for exceptionVal in range(exceptions['strict-transport-security']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['strict-transport-security'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
 		    </tbody>
 		</table>
 	</div>
@@ -80,6 +116,23 @@
 	<br/>
 	<br/>
 
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+			<tbody>
+			{% for exceptionVal in range(exceptions['set-cookie']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['set-cookie'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
 	<hr>	
 
 	<br/>
@@ -100,6 +153,23 @@
 		      		<td class = "headerName">x-frame-options</td>
 		      		<td class = "urlCount">{{ standardHeaders['x-frame-options'] }}</td>
 		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+			<tbody>
+			{% for exceptionVal in range(exceptions['x-frame-options']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['x-frame-options'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
 		    </tbody>
 		</table>
 	</div>
@@ -140,21 +210,21 @@
 	<div class = "divTable">
 	  	<table>
 	  		<thead class = "tHeading">
-	  			<th> No nonces </th>
+	  			<th class = "thVulnerablePages"> Vulnerable Pages </th>
 	  		</thead>
-			{% for noNonceURL in range(noNonce|count) %}
 			<tbody>
-				<tr>
+			{% for noNonceURL in range(noNonce|count) %}
+				<tr class = "vulnerablePages">
 		      		<td class = "headerName">{{ noNonce[noNonceURL]}}</td>
 		    	</tr>
-		    </tbody>
 		    {% endfor %}
+		    </tbody>
 		</table>
 	</div>
 	<br/>
 	<br/>
 
-	<hr>	
+	<hr class = "division">	
 
 	<br/>
 
@@ -166,14 +236,14 @@
 	  			<th> Header Name </th> 
 	  			<th> URL Count </th>
 	  		</thead>
-			{% for key, value in standardHeaders.iteritems() %}
-			<tbody>
+	  		<tbody>
+			{% for key, value in standardHeaders.iteritems() %}			
 				<tr>
 		      		<td class = "headerName">{{ key }}</td>
 		      		<td class = "urlCount">{{ standardHeaders[key]|tojson|safe }}</td>
 		    	</tr>
-		    </tbody>
 		    	{% endfor %}
+		    </tbody>
 		</table>
 	</div>
 	<br/>
@@ -191,13 +261,13 @@
 	  		<thead class = "tHeading">
 	  			<th>{{key}}</th>
 	  		</thead>
-			{% for exceptionVal in range(exceptions[key]|count) %}
 			<tbody>
+			{% for exceptionVal in range(exceptions[key]|count) %}
 				<tr>
 		      		<td class = "headerName">{{ exceptions[key][exceptionVal]|tojson|safe }}</td>
 		    	</tr>
-		    </tbody>
 		    	{% endfor %}
+		    </tbody>
 		</table>
 		</div>
 	<br/>

@@ -72,3 +72,16 @@ td {
 	padding-right:20px;
 }
 
+.thVulnerablePages {
+	background-color: #FA8072;
+}
+
+.vulnerablePages {
+	background-color: #FFE4E1;
+}
+
+.division {
+	height: 7.5px;
+    color: #000;
+    background-color: #000;
+}
