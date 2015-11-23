@@ -88,12 +88,12 @@ class ConsumerThread(Thread):
               if obj!=None:
                 obj.checkForNonces()
                 listObjs.append(obj)
+
+            result = headerCount ()
             if len(listObjs)!=0:
-              result = headerCount ()
               result.accumulateResults(listObjs)
             else:
               print("Consumed but didnt get relevant results")
-              continue
             #print("Consumed" + str (request.ip_addr))
             #logger.info(" Got Request from Server IP = " + str(request.ip_addr) + " Type = " + str(request.type))
             condition.release()
@@ -124,7 +124,7 @@ class UrlHeader(object):
     fp = open(logFilePath,"a")
     try:
       self.infile = opener.open(self.url)
-    except Exception as e:
+    except Exception, e:
       errorMessage = str(datetime.datetime.now())+"--"+e.message+"\n"
       fp.write(errorMessage)
       return None
