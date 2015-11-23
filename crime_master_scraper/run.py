@@ -63,7 +63,7 @@ def client_listen():
 	    #print >>sys.stderr, 'received "%s"' % response.result_dict
             print " Got Response "
             #print response
-            waitfor = waitfor + 1
+            #waitfor = waitfor + 1
 	    ProducerResponse(response);
                 
         finally:
@@ -145,6 +145,7 @@ class ConsumerResponseThread(Thread):
 
     def addToResultData(self,response):
         global resultData
+        global waitfor
         print '\n\n\n\n'
         #print response
         for key,value in response.standardHeaders.iteritems():
@@ -164,7 +165,7 @@ class ConsumerResponseThread(Thread):
         resultData.countNonces+=response.countNonces
 
         resultData.noNoncesUrls.extend(response.noNoncesUrls)
-
+        waitfor = waitfor + 1
 
     
 def ProducerResponse(response):
