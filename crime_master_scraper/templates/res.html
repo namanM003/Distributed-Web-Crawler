@@ -1,0 +1,323 @@
+<html>
+   <head>
+        <title>Web Crawler</title>
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/result.css') }}">
+    </head>
+
+
+<body>
+
+<h1><u> Results </u></h1> <br/>
+
+
+	<div class = "divTable">
+		<h2><u> Content-Security Policy </u></h2>
+		<center><i>Content Security Policy is a security policy which prevents cross-site scripting, clickjacking and code injection attacks resulted from malicious content execution in web page </i></center><br/><br/>
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number of pages satisfying </th>
+	  		</thead>
+			<tbody>
+		      	<tr>
+		      		<td class = "headerName">content-security-policy</td>
+		      		<td class = "urlCount">{{ standardHeaders['content-security-policy'] }}</td>
+		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+	  		<tbody>
+			{% for exceptionVal in range(exceptions['content-security-policy']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['content-security-policy'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<hr>	
+
+	<br/>
+
+
+
+	<div class = "divTable">
+		<h2><u> HTTP Strict Transport Policy</u></h2> 
+		<center><i>HTTP Strict Transport Security is a security policy which protect secure HTTPS websites against downgrade attacks and cookie hijacking </i></center><br/><br/>
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number of pages satisfying </th>
+	  		</thead>
+			<tbody>
+		      	<tr>
+		      		<td class = "headerName">strict-transport-security</td>
+		      		<td class = "urlCount">{{ standardHeaders['strict-transport-security'] }}</td>
+		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+	  		<tbody>
+			{% for exceptionVal in range(exceptions['strict-transport-security']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['strict-transport-security'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<hr>	
+
+	<br/>
+
+
+
+
+
+	<div class = "divTable">
+		<h2><u> HttpOnly and Secure Cookies </u></h2>
+		<center><i>HTTP Strict Transport Security is a security policy which protect secure HTTPS websites against downgrade attacks and cookie hijacking</i></center><br/><br/>
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number of pages satisfying </th>
+	  		</thead>
+			<tbody>
+		      	<tr>
+		      		<td class = "headerName">set-cookie</td>
+		      		<td class = "urlCount">{{ standardHeaders['set-cookie'] }}</td>
+		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+			<tbody>
+			{% for exceptionVal in range(exceptions['set-cookie']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['set-cookie'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<hr>	
+
+	<br/>
+
+
+
+
+
+	<div class = "divTable">
+		<h2><u> Anticlickjacking headers (X-Frame-Options) </u></h2> 
+		<center><i>X-Frame-Options header allows or disallows rendering of the document when inside an iframe</i></center><br/><br/>
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number of pages satisfying </th>
+	  		</thead>
+			<tbody>
+		      	<tr>
+		      		<td class = "headerName">x-frame-options</td>
+		      		<td class = "urlCount">{{ standardHeaders['x-frame-options'] }}</td>
+		    	</tr>
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class="thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+			<tbody>
+			{% for exceptionVal in range(exceptions['x-frame-options']|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions['x-frame-options'][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<hr>	
+
+	<br/>
+
+
+
+
+
+
+
+	<div>
+		<h2><u> Nonces </u></h2> <br/>
+		<center><i>Nonces are randomly-generated alphanumeric character strings which are used for security of web forms</i></center><br/><br/>
+		<table>
+			<thead class = "thFields">
+				<th class = "thHeaderName">Number of forms containing nonces</th>
+		      	<th class = "thUrlCount">{{ countNonces }}</th>
+			</thead>
+		</table>
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+
+	<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class = "thVulnerablePages"> Vulnerable Pages </th>
+	  		</thead>
+			<tbody>
+			{% for noNonceURL in range(noNonce|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ noNonce[noNonceURL]}}</td>
+		    	</tr>
+		    {% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+
+	<hr class = "division">	
+
+	<br/>
+
+
+	<div>
+		<h2><u> Standard Headers </u></h2>
+		<table>
+			<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number Of Pages Satisfying </th>
+	  		</thead>
+	  		<tbody>
+			{% for key, value in standardHeaders.iteritems() %}			
+				<tr>
+		      		<td class = "headerName">{{ key }}</td>
+		      		<td class = "urlCount">{{ standardHeaders[key]|tojson|safe }}</td>
+		    	</tr>
+		    	{% endfor %}
+		    </tbody>
+		</table>
+	</div>
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+
+	
+		<h2><u> Vulnerable Pages </u></h2> <br/>
+		{% for key, value in standardHeaders.iteritems() %}
+		<div class = "divTable">
+	  	<table>
+	  		<thead class = "tHeading">
+	  			<th class = "thVulnerablePages">{{key}}</th>
+	  		</thead>
+			<tbody>
+			{% for exceptionVal in range(exceptions[key]|count) %}
+				<tr class = "vulnerablePages">
+		      		<td class = "headerName">{{ exceptions[key][exceptionVal]|tojson|safe }}</td>
+		    	</tr>
+		    	{% endfor %}
+		    </tbody>
+		</table>
+		</div>
+	<br/>
+	<br/>
+	{% endfor %}	
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+
+
+	<div>
+		<h2><u> Other Headers </u></h2> <br/>
+		<table>
+			<thead class = "tHeading">
+	  			<th> Header Name </th> 
+	  			<th> Number Of Pages Satisfying </th>
+	  		</thead>
+			{% for key, value in otherHeaders.iteritems() %}
+			<tbody>
+				<tr>
+			      <td class = "headerName">{{ key }}</td>
+			      <td class = "urlCount">{{ otherHeaders[key]|tojson|safe }}</td>
+		    	</tr>
+		    </tbody>
+		    {% endfor %}
+		</table>
+	</div>
+	<br/>
+	<br/>
+	
+	<hr>	
+
+	<br/>
+
+	<div>
+		<h2><u> Redirect URL </u></h2> <br/>
+		<table>
+			<thead class = "thFields">
+				<th class = "thHeaderName">Number of URLs redirected</th>
+		      	<th class = "thUrlCount">{{ redirects }}</th>
+			</thead>
+		</table>
+	</div>
+	<br/>
+	<br/>
+	
+	<br/>
+	<br/>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+body {
+	font-size: 14px;
+    color: #3f3f3f;
+}
+
+h1, h2{
+	text-align:center;
+}
+
+div {
+	margin-left: 20%;
+	margin-right: 18%;
+}
+
+
+.divTable {
+	max-height: 200px;
+	overflow: auto;
+	table-layout: fixed;
+	word-wrap: break-word;
+	width: 800px;
+}
+
+
+table {
+	border: 1px solid #ddd !important;
+	padding:0 !important;
+	border-spacing:0;
+	width:785px !important;
+	table-layout: fixed;
+}
+
+.tHeading {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    background-color: #dff0d8;
+}
+
+tbody tr {
+	background-color: #f5f5f5;
+}
+
+td {
+	padding: 5px;
+}
+
+
+.headerName {
+	padding-left: 20px;
+}
+
+
+.urlCount {
+	text-align: right;
+	padding-right:20px;
+}
+
+.thFields{
+	display: table-header-group;
+    border-color: inherit;
+    background-color: #dff0d8;
+}
+
+.thHeaderName {
+	padding-left: 20px;
+}
+
+
+.thUrlCount {
+	text-align: right;
+	padding-right:20px;
+}
+
+.thVulnerablePages {
+	background-color: #FA8072;
+}
+
+.vulnerablePages {
+	background-color: #FFE4E1;
+}
+
+.division {
+	height: 7.5px;
+    color: #000;
+    background-color: #000;
+}
